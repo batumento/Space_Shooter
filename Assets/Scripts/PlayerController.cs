@@ -13,17 +13,27 @@ public class Boundry
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float speed;
+    [SerializeField] private float tilt;
+    [SerializeField] private GameObject laserPrefab;
+    [SerializeField] private GameObject laserSpawn;
+
     Rigidbody physic;
     public Boundry boundry;
+    private LaserController controller;
 
     private void Awake()
     {
         physic = gameObject.GetComponent<Rigidbody>();
+        controller = Object.FindObjectOfType<LaserController>();
     }
     //FixedUpdate'e fizik ile ilgili iþlemleri yazýyoruz.
     private void FixedUpdate()
     {
         ShipMove();
+    }
+    private void Update()
+    {
+        Fire();
     }
     private void ShipMove()
     {
@@ -38,7 +48,18 @@ public class PlayerController : MonoBehaviour
             1,                                                         //y
             Mathf.Clamp(physic.position.z, boundry.zMin, boundry.zMax));//z
         physic.position = position;
-        
+        physic.rotation = Quaternion.Euler(0,0,physic.velocity.x * tilt);
         
     }
+    private void Fire()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Instantiate(laserPrefab, laserSpawn.transform.position, laserSpawn.transform.rotation);
+        }
+    }
+
+    
+        
+    
 }
