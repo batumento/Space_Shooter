@@ -2,18 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LaserController : MonoBehaviour
+public class RandomRotate : MonoBehaviour
 {
+    Rigidbody physics;
     [SerializeField] private float speed;
-    Rigidbody physic;
     private void Awake()
     {
-        physic = GetComponent<Rigidbody>();
+        physics = GetComponent<Rigidbody>();
     }
     private void Start()
     {
-        physic.velocity = transform.forward * speed;
+        physics.angularVelocity = Random.insideUnitSphere * speed;
     }
-
-    
 }

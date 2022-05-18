@@ -14,17 +14,19 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float speed;
     [SerializeField] private float tilt;
+    [SerializeField] private float nextFire;
+    [SerializeField] private float fireRate;
     [SerializeField] private GameObject laserPrefab;
     [SerializeField] private GameObject laserSpawn;
 
     Rigidbody physic;
     public Boundry boundry;
-    private LaserController controller;
+    private Mover mover;
 
     private void Awake()
     {
         physic = gameObject.GetComponent<Rigidbody>();
-        controller = Object.FindObjectOfType<LaserController>();
+        mover = Object.FindObjectOfType<Mover>();
     }
     //FixedUpdate'e fizik ile ilgili iþlemleri yazýyoruz.
     private void FixedUpdate()
@@ -53,8 +55,9 @@ public class PlayerController : MonoBehaviour
     }
     private void Fire()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && Time.time > nextFire)
         {
+            nextFire = Time.time + fireRate;
             Instantiate(laserPrefab, laserSpawn.transform.position, laserSpawn.transform.rotation);
         }
     }
