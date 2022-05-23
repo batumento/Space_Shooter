@@ -16,17 +16,38 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float tilt;
     [SerializeField] private float nextFire;
     [SerializeField] private float fireRate;
+    [SerializeField] private int maxHealth;
     [SerializeField] private GameObject laserPrefab;
     [SerializeField] private GameObject laserSpawn;
+    [SerializeField] AudioClip laserClip;
 
+    AudioSource audioSource;
     Rigidbody physic;
+    Health health;
+    LaserBar laserBar;
     public Boundry boundry;
     private Mover mover;
 
+    public int laser;
+    public int currentHealth;
+    private float fireTime;
+    public int fireCooldown;
+
+
     private void Awake()
     {
+        laserBar = Object.FindObjectOfType<LaserBar>();
+        health = Object.FindObjectOfType<Health>();
         physic = gameObject.GetComponent<Rigidbody>();
         mover = Object.FindObjectOfType<Mover>();
+        audioSource = GetComponent<AudioSource>();
+    }
+    private void Start()
+    {
+        maxHealth = 3;
+        currentHealth = maxHealth;
+        health.StartHealth(maxHealth);
+        laserBar.StartLaserBar(laser);
     }
     //FixedUpdate'e fizik ile ilgili iþlemleri yazýyoruz.
     private void FixedUpdate()
@@ -36,6 +57,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         Fire();
+        health.HealthRights(currentHealth);
     }
     private void ShipMove()
     {
@@ -55,14 +77,36 @@ public class PlayerController : MonoBehaviour
     }
     private void Fire()
     {
-        if (Input.GetMouseButtonDown(0) && Time.time > nextFire)
+        laserBar.LasersBar(laser);
+        if (laser > 0)
         {
-            nextFire = Time.time + fireRate;
-            Instantiate(laserPrefab, laserSpawn.transform.position, laserSpawn.transform.rotation);
+            if (Input.GetMouseButtonDown(0) && Time.time > nextFire)
+            {
+                nextFire = Time.time + fireRate;
+                Instantiate(laserPrefab, laserSpawn.transform.position, laserSpawn.transform.rotation);
+                audioSource.PlayOneShot(laserClip);
+                laser--;
+                fireTime = Time.time + fireCooldown;
+            }
+        }
+        else
+        {
+            FireCooldown();
         }
     }
-
+    public void Health(int _damage)
+    {
+        currentHealth -= _damage;
+    }
     
+    private void FireCooldown()
+    {
+        if (Time.time > fireTime)
+        {
+            laser = ((int)laserBar.laserBar.maxValue);
+            fireTime = Time.time + fireCooldown;
+        }
         
+    }    
     
 }
