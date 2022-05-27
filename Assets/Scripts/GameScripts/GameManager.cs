@@ -37,6 +37,6 @@ public class GameManager : MonoBehaviour
     public void Score()
     {
         score += 10;
-        scoreText.text = "Score: " + score;
+        scoreText.text = score.ToString();
     }
 }

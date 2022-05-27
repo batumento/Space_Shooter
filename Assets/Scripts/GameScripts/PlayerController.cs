@@ -44,7 +44,6 @@ public class PlayerController : MonoBehaviour
     }
     private void Start()
     {
-        maxHealth = 3;
         currentHealth = maxHealth;
         health.StartHealth(maxHealth);
         laserBar.StartLaserBar(laser);
