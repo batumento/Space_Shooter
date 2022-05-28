@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Mover : MonoBehaviour
 {
-    [SerializeField] private float speed;
+    public float speed;
     Rigidbody physic;
     private void Awake()
     {

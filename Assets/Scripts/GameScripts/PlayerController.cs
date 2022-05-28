@@ -25,6 +25,8 @@ public class PlayerController : MonoBehaviour
     Rigidbody physic;
     Health health;
     LaserBar laserBar;
+    GameManager gameManager;
+    WaveGenerator waveGenerator;
     public Boundry boundry;
     private Mover mover;
 
@@ -36,6 +38,8 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        waveGenerator = Object.FindObjectOfType<WaveGenerator>();
+        gameManager = Object.FindObjectOfType<GameManager>();
         laserBar = Object.FindObjectOfType<LaserBar>();
         health = Object.FindObjectOfType<Health>();
         physic = gameObject.GetComponent<Rigidbody>();
@@ -76,22 +80,30 @@ public class PlayerController : MonoBehaviour
     }
     private void Fire()
     {
-        laserBar.LasersBar(laser);
-        if (laser > 0)
+        if (!waveGenerator.gameOver)
         {
-            if (Input.GetMouseButtonDown(0) && Time.time > nextFire)
+            laserBar.LasersBar(laser);
+            if (laser > 0)
             {
-                nextFire = Time.time + fireRate;
-                Instantiate(laserPrefab, laserSpawn.transform.position, laserSpawn.transform.rotation);
-                audioSource.PlayOneShot(laserClip);
-                laser--;
-                fireTime = Time.time + fireCooldown;
+                if (Input.GetMouseButtonDown(0) && Time.time > nextFire)
+                {
+                    nextFire = Time.time + fireRate;
+                    Instantiate(laserPrefab, laserSpawn.transform.position, laserSpawn.transform.rotation);
+                    audioSource.PlayOneShot(laserClip);
+                    laser--;
+                    fireTime = Time.time + fireCooldown;
+                }
+            }
+            else
+            {
+                FireCooldown();
             }
         }
         else
         {
-            FireCooldown();
+            return;
         }
+        
     }
     public void Health(int _damage)
     {
@@ -106,6 +118,6 @@ public class PlayerController : MonoBehaviour
             fireTime = Time.time + fireCooldown;
         }
         
-    }    
+    }
     
 }

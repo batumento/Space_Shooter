@@ -6,9 +6,6 @@ public class DestroyByBoundary : MonoBehaviour
 {
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == "Laser")
-        {
-            Destroy(other.gameObject);
-        }
+       Destroy(other.gameObject);
     }
 }
